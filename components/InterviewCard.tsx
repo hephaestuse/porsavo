@@ -60,7 +60,7 @@ function InterviewCard({
         </div>
         <div className="flex flex-row justify-between">
           <DispalyTechIcon techStack={techstack}/>
-          <Button className="btn-primary">
+          <Button className="btn-primary shadow-[0_4px_15px_rgba(0,0,0)]">
             <Link
               href={
                 feedback

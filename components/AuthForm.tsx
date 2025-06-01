@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import FormField from "./FormField";
 import { useRouter } from "next/navigation";
 
+
 function authFormSchema(type: FormType) {
   return z.object({
     name:
@@ -35,17 +36,20 @@ function AuthForm({ type }: { type: FormType }) {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       if (type === "sign-up") {
+        const { name, email, password } = values;
+
+
         toast.success("ثبت نام با موفقیت انجام شد لطفا وارد شوید");
         router.push("/sign-in");
       } else {
+
         toast.success("با موفقیت وارد شدید");
         router.push("/");
       }
     } catch (error) {
-      console.log(error);
       toast.error(`خطایی رخ داد${error}`);
     }
   }
