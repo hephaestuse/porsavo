@@ -10,7 +10,7 @@ import Link from "next/link";
 import { toast } from "sonner";
 import FormField from "./FormField";
 import { useRouter } from "next/navigation";
-
+import { signIn, signUp } from "@/actions/auth";
 
 function authFormSchema(type: FormType) {
   return z.object({
@@ -39,15 +39,23 @@ function AuthForm({ type }: { type: FormType }) {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       if (type === "sign-up") {
-        const { name, email, password } = values;
+        const result = await signUp(values);
 
-
-        toast.success("ثبت نام با موفقیت انجام شد لطفا وارد شوید");
-        router.push("/sign-in");
+        if (result.status === "success") {
+          toast.success("ثبت نام با موفقیت انجام شد لطفا وارد شوید");
+          router.push("/sign-in");
+        } else {
+          toast.error(result.status);
+        }
       } else {
+        const result = await signIn(values);
 
-        toast.success("با موفقیت وارد شدید");
-        router.push("/");
+        if (result.status === "success") {
+          toast.success("با موفقیت وارد شدید");
+          router.push("/");
+        } else {
+          toast.error(result.status);
+        }
       }
     } catch (error) {
       toast.error(`خطایی رخ داد${error}`);
