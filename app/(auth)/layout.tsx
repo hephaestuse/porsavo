@@ -1,4 +1,6 @@
 import { getUserSession } from "@/actions/auth";
+import Image from "next/image";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import React, { ReactNode } from "react";
 

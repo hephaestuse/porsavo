@@ -66,8 +66,10 @@ function AuthForm({ type }: { type: FormType }) {
     <div className="card-border lg:min-w-[566px]">
       <div className="flex flex-col gap-6 card py-14 px-10 ">
         <div className="flex flex-row gap-2 justify-center">
-          <Image src="/logo.svg" alt="logo" width={38} height={32} />
-          <h2 className="text-primary-100">پرساوو</h2>
+          <Link href="/" className="flex items-center gap-2">
+            <Image src="/logo.svg" alt="logo" width={38} height={32} />
+            <h2 className="text-primary-100">پرساوو</h2>
+          </Link>
         </div>
         <h3 className="text-primary-100">مطاحبه هاتو با هوش مصنوعی تمرین کن</h3>
 
