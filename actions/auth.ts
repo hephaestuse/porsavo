@@ -3,6 +3,9 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
+import { SignInWithOAuthCredentials } from "@supabase/supabase-js";
+import { SignInParams, SignUpParams } from "@/types";
+import { toast } from "sonner";
 
 export async function signUp(params: SignUpParams) {
   const { name, email, password } = params;
@@ -55,7 +58,7 @@ export async function signIn(params: SignInParams) {
   const { data: existingUser } = await supabase
     .from("userDetails")
     .select("*")
-    .eq("email", credentials.email)
+    .eq("email", data.user?.email)
     .limit(1)
     .single();
 
@@ -94,4 +97,15 @@ export async function getUserSession() {
     status: "success",
     user: data?.user,
   };
+}
+export async function OAuthSignIn({ provider }: SignInWithOAuthCredentials) {
+  const origin = (await headers()).get("origin");
+  const supabase = await createClient();
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: provider,
+    options: {
+      redirectTo: `${origin}/auth/callback`,
+    },
+  });
+  return { data, error };
 }

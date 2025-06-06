@@ -11,7 +11,8 @@ import { toast } from "sonner";
 import FormField from "./FormField";
 import { useRouter } from "next/navigation";
 import { signIn, signUp } from "@/actions/auth";
-
+import OAthLoginBtn from "./OAthLoginBtn";
+import { FormType } from "@/types";
 function authFormSchema(type: FormType) {
   return z.object({
     name:
@@ -97,6 +98,7 @@ function AuthForm({ type }: { type: FormType }) {
             <Button className="btn" type="submit">
               {isSigneIn ? "ورود" : "ثبت نام"}
             </Button>
+            <OAthLoginBtn provider="github" />
             <p className="text-center">
               {isSigneIn ? "هنوز اکانت ندارم" : "از قبل اکانت دارم"}؟
               <Link

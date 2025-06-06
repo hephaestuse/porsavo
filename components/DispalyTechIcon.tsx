@@ -1,5 +1,6 @@
 import { getTechLogos } from "@/app/utils";
 import { cn } from "@/lib/utils";
+import { TechIconProps } from "@/types";
 import Image from "next/image";
 import React from "react";
 

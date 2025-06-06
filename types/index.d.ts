@@ -1,3 +1,5 @@
+import { SignInWithOAuthCredentials } from "@supabase/supabase-js";
+
 interface Feedback {
   id: string;
   interviewId: string;
@@ -77,7 +79,7 @@ interface SignInParams {
 }
 
 interface SignUpParams {
-  name?: string ;
+  name?: string;
   email: string;
   password: string;
 }

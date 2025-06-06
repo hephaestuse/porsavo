@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import { Button } from "./ui/button";
 import { signOut } from "@/actions/auth";
-import { cn } from "@/app/utils";
 
 function SignOutbtn() {
   const [isLoading, setIsLoading] = useState(false);
