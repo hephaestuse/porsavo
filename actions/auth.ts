@@ -95,7 +95,7 @@ export async function getUserSession() {
   }
   return {
     status: "success",
-    user: data?.user,
+    user: data.user,
   };
 }
 export async function OAuthSignIn({ provider }: SignInWithOAuthCredentials) {

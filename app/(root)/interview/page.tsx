@@ -1,11 +1,27 @@
+import { getUserSession } from "@/actions/auth";
 import Agent from "@/components/Agent";
+import { createClient } from "@/utils/supabase/server";
 import React from "react";
 
-function page() {
+async function page() {
+  const session = await getUserSession();
+
+  if (!session) {
+    return <div>لطفاً وارد شوید</div>; // یا redirect یا notFound()
+  }
+
+  const userData = {
+    userName:
+      session.user?.identities?.[0]?.identity_data?.full_name ?? "کاربر",
+    userId: session.user.id,
+  };
   return (
     <>
-    <h1>interview page</h1>
-      <Agent userName="ahad"/>
+      <Agent
+        userName={userData.userName}
+        userId={userData.userId}
+        type="generate"
+      />
     </>
   );
 }

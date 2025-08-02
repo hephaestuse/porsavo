@@ -1,3 +1,5 @@
+import { getUserSession } from "@/actions/auth";
+import { getLatestInterviews, getUserInterviews } from "@/actions/interviews";
 import InterviewCard from "@/components/InterviewCard";
 import { Button } from "@/components/ui/button";
 import { dummyInterviews } from "@/constants";
@@ -5,7 +7,12 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-function page() {
+async function page() {
+  const session = await getUserSession();
+
+  const userInterviews = await getUserInterviews(session?.user.id);
+  const latestInterviews = await getLatestInterviews(session?.user.id);
+
   return (
     <>
       <section className="card-cta">
@@ -28,19 +35,23 @@ function page() {
         />
       </section>
       <section className="flex flex-col gap-6 mt-8">
-        <h2>مصاحبه های شما</h2>
-        <div className="interviews-section max-lg:justify-center">
-          {!dummyInterviews && <p>شما تا کنون هیچ مصاحبه ای نداشته اید </p>}
-          {dummyInterviews.map((interview) => (
-            <InterviewCard key={interview.id} {...interview} />
-          ))}
-        </div>
+        {session && (
+          <>
+            <h2>مصاحبه های شما</h2>
+            <div className="interviews-section max-lg:justify-center">
+              {!userInterviews && <p>شما تا کنون هیچ مصاحبه ای نداشته اید </p>}
+              {userInterviews?.map((interview) => (
+                <InterviewCard key={interview.id} {...interview} />
+              ))}
+            </div>
+          </>
+        )}
       </section>
       <section className="flex flex-col gap-6 mt-8">
         <h2>یک مصاحبه شروع کنید</h2>
         <div className="interviews-section max-lg:justify-center">
-          {!dummyInterviews && <p>در حال حاظر هیچ مصاحبه ای در دسترس نیست</p>}
-          {dummyInterviews.map((interview) => (
+          {!latestInterviews && <p>در حال حاظر هیچ مصاحبه ای در دسترس نیست</p>}
+          {latestInterviews?.map((interview) => (
             <InterviewCard key={interview.id} {...interview} />
           ))}
         </div>

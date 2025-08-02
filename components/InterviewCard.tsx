@@ -6,6 +6,7 @@ import { getRandomInterviewCover } from "@/app/utils";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import DispalyTechIcon from "./DispalyTechIcon";
+import { Feedback, InterviewCardProps } from "@/types";
 dayjs.extend(jalaliday);
 function InterviewCard({
   interviewId,
@@ -35,7 +36,7 @@ function InterviewCard({
             height={90}
             className="rounded-full object-fill siz-[90px]"
           />
-          <h3>{role}interview</h3>
+          <h3 className="capitalize">{role} interview</h3>
           <div className="flex flex-row gap-5 mt-3">
             <div className="flex flex-row gap-2">
               <Image

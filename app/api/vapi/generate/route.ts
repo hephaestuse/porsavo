@@ -31,7 +31,12 @@ export async function POST(request: Request) {
       type,
       level,
       techstack: techstack.split(","),
-      questions: JSON.parse(questions),
+      questions: JSON.parse(
+        questions
+          .replace(/```json/g, "")
+          .replace(/```/g, "")
+          .trim()
+      ),
       user_id: userid, // 🟢 از camelCase به snake_case
       finalized: true,
       cover_image: getRandomInterviewCover(), // 🟢 همینطور
