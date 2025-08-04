@@ -38,3 +38,16 @@ export async function getLatestInterviews(userId: string | undefined) {
     return null;
   }
 }
+export async function getInterviewsById(InterViewId: string) {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("interviews")
+    .select("*")
+    .eq("id", InterViewId)
+    .single();
+
+  if (error) throw new Error(error.message);
+
+  return data;
+}

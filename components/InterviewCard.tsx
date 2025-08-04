@@ -9,7 +9,7 @@ import DispalyTechIcon from "./DispalyTechIcon";
 import { Feedback, InterviewCardProps } from "@/types";
 dayjs.extend(jalaliday);
 function InterviewCard({
-  interviewId,
+  id,
   userId,
   role,
   type,
@@ -60,14 +60,10 @@ function InterviewCard({
           </div>
         </div>
         <div className="flex flex-row justify-between">
-          <DispalyTechIcon techStack={techstack}/>
+          <DispalyTechIcon techStack={techstack} />
           <Button className="btn-primary shadow-[0_4px_15px_rgba(0,0,0)]">
             <Link
-              href={
-                feedback
-                  ? `/interview/${interviewId}/feedback`
-                  : `/interview/${interviewId}`
-              }
+              href={feedback ? `/interview/${id}/feedback` : `/interview/${id}`}
             >
               {feedback ? "مشاهده نتیجه" : "مشاهده مصاحبه"}
             </Link>

@@ -9,9 +9,10 @@ import React from "react";
 
 async function page() {
   const session = await getUserSession();
-
-  const userInterviews = await getUserInterviews(session?.user.id);
-  const latestInterviews = await getLatestInterviews(session?.user.id);
+  const [userInterviews, latestInterviews] = await Promise.all([
+    await getUserInterviews(session?.user.id),
+    await getLatestInterviews(session?.user.id),
+  ]);
 
   return (
     <>
