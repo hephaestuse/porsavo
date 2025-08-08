@@ -154,39 +154,63 @@ End the conversation on a polite and positive note.
   },
 };
 
-export const feedbackSchema = z.object({
-  totalScore: z.number(),
-  categoryScores: z.tuple([
-    z.object({
-      name: z.literal("Communication Skills"),
-      score: z.number(),
-      comment: z.string(),
-    }),
-    z.object({
-      name: z.literal("Technical Knowledge"),
-      score: z.number(),
-      comment: z.string(),
-    }),
-    z.object({
-      name: z.literal("Problem Solving"),
-      score: z.number(),
-      comment: z.string(),
-    }),
-    z.object({
-      name: z.literal("Cultural Fit"),
-      score: z.number(),
-      comment: z.string(),
-    }),
-    z.object({
-      name: z.literal("Confidence and Clarity"),
-      score: z.number(),
-      comment: z.string(),
-    }),
-  ]),
-  strengths: z.array(z.string()),
-  areasForImprovement: z.array(z.string()),
-  finalAssessment: z.string(),
-});
+export const feedbackSchema = {
+  type: "OBJECT",
+  properties: {
+    totalScore: {
+      type: "NUMBER",
+    },
+    categoryScores: {
+      type: "ARRAY",
+      minItems: 5,
+      maxItems: 5,
+      items: {
+        type: "OBJECT",
+        properties: {
+          name: {
+            type: "STRING",
+            enum: [
+              "Communication Skills",
+              "Technical Knowledge",
+              "Problem Solving",
+              "Cultural Fit",
+              "Confidence and Clarity",
+            ],
+          },
+          score: {
+            type: "NUMBER",
+          },
+          comment: {
+            type: "STRING",
+          },
+        },
+        required: ["name", "score", "comment"],
+      },
+    },
+    strengths: {
+      type: "ARRAY",
+      items: {
+        type: "STRING",
+      },
+    },
+    areasForImprovement: {
+      type: "ARRAY",
+      items: {
+        type: "STRING",
+      },
+    },
+    finalAssessment: {
+      type: "STRING",
+    },
+  },
+  required: [
+    "totalScore",
+    "categoryScores",
+    "strengths",
+    "areasForImprovement",
+    "finalAssessment",
+  ],
+};
 
 export const interviewCovers = [
   "/adobe.png",

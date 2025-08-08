@@ -1,5 +1,28 @@
 import { SignInWithOAuthCredentials } from "@supabase/supabase-js";
 
+export type CategoryName =
+  | "Communication Skills"
+  | "Technical Knowledge"
+  | "Problem Solving"
+  | "Cultural Fit"
+  | "Confidence and Clarity";
+
+export interface CategoryScore {
+  name: CategoryName;
+  score: number;
+  comment: string;
+}
+
+export interface FeedbackResult {
+  interviewId: string;
+  userId: string;
+  totalScore: number;
+  categoryScores: CategoryScore[];
+  strengths: string[];
+  areasForImprovement: string[];
+  finalAssessment: string;
+}
+
 interface Feedback {
   id: string;
   interviewId: string;

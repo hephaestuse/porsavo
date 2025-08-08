@@ -1,6 +1,10 @@
 "use server";
-
+import { GoogleGenAI, Type } from "@google/genai";
+import { feedbackSchema } from "@/constants";
+import { CreateFeedbackParams, FeedbackResult } from "@/types";
 import { createClient } from "@/utils/supabase/server";
+import { google } from "@ai-sdk/google";
+import { generateObject } from "ai";
 
 export async function getUserInterviews(userId: string | undefined) {
   if (userId) {
@@ -51,3 +55,49 @@ export async function getInterviewsById(InterViewId: string) {
 
   return data;
 }
+
+export async function createFeedback(feedbackParama: FeedbackResult) {
+  const {
+    userId,
+    interviewId,
+    totalScore,
+    categoryScores,
+    strengths,
+    areasForImprovement,
+    finalAssessment,
+  } = feedbackParama;
+  const supabase = await createClient();
+  try {
+    const { data, error } = await supabase
+      .from("feedback")
+      .insert([
+        {
+          userId,
+          interviewId,
+          totalScore,
+          categoryScores,
+          strengths,
+          areasForImprovement,
+          finalAssessment,
+        },
+      ])
+      .select();
+    if (error) {
+      return {
+        status: false,
+        feedbackId: null,
+      };
+    }
+    return {
+      status: true,
+      feedbackId: data[0].id,
+    };
+  } catch (error) {
+    console.log("error feedback DB post");
+    return {
+      status: false,
+      feedbackId: null,
+    };
+  }
+}
+

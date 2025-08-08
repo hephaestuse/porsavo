@@ -2,11 +2,17 @@
 
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 
 import { cn } from "@/lib/utils";
 import { vapi } from "@/lib/vapi.sdk";
-import { interviewer } from "@/constants";
+import { feedbackSchema, interviewer } from "@/constants";
+import { createFeedback } from "@/actions/interviews";
+import { GoogleGenAI, Type } from "@google/genai";
+import { CreateFeedbackParams } from "@/types";
+import { generateObject } from "ai";
+import { google } from "@ai-sdk/google";
+import { toast } from "sonner";
 
 enum CallStatus {
   INACTIVE = "INACTIVE",
@@ -37,7 +43,9 @@ const Agent = ({
   const [messages, setMessages] = useState<SavedMessage[]>([]);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [lastMessage, setLastMessage] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
+
   useEffect(() => {
     console.log(callStatus);
   }, [callStatus]);
@@ -92,26 +100,85 @@ const Agent = ({
       setLastMessage(messages[messages.length - 1].content);
     }
   }, [messages]);
-  const handleGenerateFeedback = async (message: SavedMessage[]) => {
-    console.log("generate feedback here");
-    //TO DO: make serever action to generate feedback
-    const { success, id } = { success: true, id: "12345" };
-    if (success && id) {
-      router.push(`/interview/${interviewId}/feedback`);
-    } else {
-      console.log("error saving feedback");
-      router.push(`/`);
-    }
-  };
+
   useEffect(() => {
+    if (messages.length > 0) {
+      setLastMessage(messages[messages.length - 1].content);
+    }
+    const handleGenerateFeedback = async (messages: SavedMessage[]) => {
+      const ai = new GoogleGenAI({
+        apiKey: process.env.NEXT_PUBLIC_GENAI_KEY!,
+      });
+      try {
+        setIsLoading(true);
+
+        const formattedTranscript = messages
+          .map(
+            (sentence: { role: string; content: string }) =>
+              `- ${sentence.role}: ${sentence.content}\n`
+          )
+          .join("");
+
+        const respons = await ai.models.generateContent({
+          model: "gemini-2.0-flash",
+          config: {
+            responseMimeType: "application/json",
+            responseSchema: feedbackSchema,
+            systemInstruction: {
+              role: "system",
+              parts: [
+                {
+                  text: "You are a professional interviewer analyzing a mock interview. Your task is to evaluate the candidate based on structured categories",
+                },
+              ],
+            },
+          },
+          contents: `
+      You are an AI interviewer analyzing a mock interview. Your task is to evaluate the candidate based on structured categories. Be thorough and detailed in your analysis. Don't be lenient with the candidate. If there are mistakes or areas for improvement, point them out.
+      Transcript:
+      ${formattedTranscript}
+
+      Please score the candidate from 0 to 100 in the following areas. Do not add categories other than the ones provided:
+      - **Communication Skills**: Clarity, articulation, structured responses.
+      - **Technical Knowledge**: Understanding of key concepts for the role.
+      - **Problem-Solving**: Ability to analyze problems and propose solutions.
+      - **Cultural & Role Fit**: Alignment with company values and job role.
+      - **Confidence & Clarity**: Confidence in responses, engagement, and clarity.
+      `,
+        });
+        const responsObject = JSON.parse(respons.text!);
+        const feedback = {
+          interviewId: interviewId,
+          userId: userId,
+          totalScore: responsObject.totalScore,
+          categoryScores: responsObject.categoryScores,
+          strengths: responsObject.strengths,
+          areasForImprovement: responsObject.areasForImprovement,
+          finalAssessment: responsObject.finalAssessment,
+        };
+        const { status, feedbackId } = await createFeedback(feedback);
+        console.log(status, feedbackId);
+        if (status && feedbackId) {
+          router.push(`/interview/${interviewId}/feedback`);
+        } else {
+          toast.error("there is a problem with saving feedback");
+          router.push(`/`);
+        }
+      } catch (error) {
+        console.error("Error saving feedback:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
     if (callStatus === CallStatus.FINISHED) {
       if (type === "generate") {
-        router.push(`/`);
+        router.push("/");
       } else {
         handleGenerateFeedback(messages);
       }
     }
   }, [callStatus]);
+
   const handleCall = async () => {
     setCallStatus(CallStatus.CONNECTING);
     if (type === "generate") {
