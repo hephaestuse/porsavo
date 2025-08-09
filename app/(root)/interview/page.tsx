@@ -7,7 +7,7 @@ async function page() {
   const session = await getUserSession();
 
   if (!session) {
-    redirect("/");
+    redirect("/sign-in");
   }
 
   const userData = {
