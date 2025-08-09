@@ -9,6 +9,7 @@ import React from "react";
 
 async function page() {
   const session = await getUserSession();
+  
   const [userInterviews, latestInterviews] = await Promise.all([
     await getUserInterviews(session?.user.id),
     await getLatestInterviews(session?.user.id),
@@ -18,13 +19,12 @@ async function page() {
     <>
       <section className="card-cta">
         <div className="flex flex-col gap-6 max-w-lg">
-          <h2>برای مصاحبه آماده شو </h2>
-          <h3>باتمرینات وتحلیل های هوش مصنوعی پرساوو</h3>
+          <h3>Get Interview-Ready with AI-Powered Practice & Feedback</h3>
           <p className="text-lg">
-            یک مصاحبه واقعی رو تمرین کن و در لحظه تحلیل نتایجتو دریافت کن
+            Practice real interview questions & get instant feedback.
           </p>
           <Button asChild className="btn-primary max-sm:w-full">
-            <Link href={"/interview"}>شروع مصاحبه</Link>
+            <Link href={"/interview"}>Start an Interview</Link>
           </Button>
         </div>
         <Image
@@ -38,20 +38,22 @@ async function page() {
       <section className="flex flex-col gap-6 mt-8">
         {session && (
           <>
-            <h2>مصاحبه های شما</h2>
+            <h2>Your Past Interviews</h2>
             <div className="interviews-section max-lg:justify-center">
-              {!userInterviews && <p>شما تا کنون هیچ مصاحبه ای نداشته اید </p>}
+              {!userInterviews && (
+                <p>you have not done any interview untill now</p>
+              )}
               {userInterviews?.map((interview) => (
-                <InterviewCard key={interview.id} {...interview} />
+                <InterviewCard key={interview.id} userId={session.user.id} {...interview} />
               ))}
             </div>
           </>
         )}
       </section>
       <section className="flex flex-col gap-6 mt-8">
-        <h2>یک مصاحبه شروع کنید</h2>
+        <h2>Start an Interview</h2>
         <div className="interviews-section max-lg:justify-center">
-          {!latestInterviews && <p>در حال حاظر هیچ مصاحبه ای در دسترس نیست</p>}
+          {!latestInterviews && <p>there is no interview avalible</p>}
           {latestInterviews?.map((interview) => (
             <InterviewCard key={interview.id} {...interview} />
           ))}

@@ -86,6 +86,10 @@ interface RouteParams {
   searchParams: Promise<Record<string, string>>;
 }
 
+interface GetFeedbackForCardsParams {
+  interviewId?: string;
+  userId?: string;
+}
 interface GetFeedbackByInterviewIdParams {
   interviewId: string;
   userId: string;

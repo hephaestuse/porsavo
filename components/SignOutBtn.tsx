@@ -12,9 +12,13 @@ function SignOutbtn() {
     setIsLoading(false);
   };
   return (
-    <form className="mr-auto" onSubmit={handleLogOut}>
-      <Button className="btn-primary max-sm:w-full" disabled={isLoading} type="submit">
-        {isLoading ? "خروج..." : "خروج"}
+    <form className="ms-auto" onSubmit={handleLogOut}>
+      <Button
+        className="btn-primary max-sm:w-full"
+        disabled={isLoading}
+        type="submit"
+      >
+        {isLoading ? "Log out..." : "Log out"}
       </Button>
     </form>
   );

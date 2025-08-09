@@ -5,6 +5,7 @@ import {
   CreateFeedbackParams,
   FeedbackResult,
   GetFeedbackByInterviewIdParams,
+  GetFeedbackForCardsParams,
 } from "@/types";
 import { createClient } from "@/utils/supabase/server";
 import { google } from "@ai-sdk/google";
@@ -109,8 +110,6 @@ export async function GetFeedbackByInterviewId({
   interviewId,
   userId,
 }: GetFeedbackByInterviewIdParams) {
-  console.log("thisis", interviewId);
-
   if (userId) {
     const supabase = await createClient();
 
@@ -120,6 +119,24 @@ export async function GetFeedbackByInterviewId({
       .eq("interviewId", interviewId)
       .eq("userId", userId)
       .order("created_at", { ascending: false });
+
+    if (error) return console.log(error);
+    return data;
+  }
+}
+export async function GetFeedbackForCards({
+  interviewId,
+  userId,
+}: GetFeedbackForCardsParams) {
+  if (userId) {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase
+      .from("feedback")
+      .select("totalScore,finalAssessment")
+      .eq("interviewId", interviewId)
+      .eq("userId", userId)
+      .order("totalScore", { ascending: false });
 
     if (error) return console.log(error);
     return data;

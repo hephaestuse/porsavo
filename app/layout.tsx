@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { Rubik } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
+import PageLoader from "@/components/ui/PageLoader";
 const rubik = Rubik({
   weight: ["300", "400", "500", "700"],
   subsets: ["arabic"],
@@ -19,6 +20,7 @@ export default function RootLayout({
   return (
     <html className="dark">
       <body className={`${rubik.className} antialiased pattern`}>
+        <PageLoader />
         {children}
         <Toaster />
       </body>

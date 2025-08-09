@@ -6,9 +6,11 @@ import { getRandomInterviewCover } from "@/app/utils";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import DispalyTechIcon from "./DispalyTechIcon";
-import { Feedback, InterviewCardProps } from "@/types";
+import { InterviewCardProps } from "@/types";
+import { GetFeedbackForCards } from "@/actions/interviews";
+type CardFeedback = { totalScore: number; finalAssessment: string };
 dayjs.extend(jalaliday);
-function InterviewCard({
+async function InterviewCard({
   id,
   userId,
   role,
@@ -16,9 +18,19 @@ function InterviewCard({
   techstack,
   createdAt,
 }: InterviewCardProps) {
-  const feedback = null as Feedback | null;
+  const feedback = (await GetFeedbackForCards({
+    interviewId: id,
+    userId,
+  })) as CardFeedback[];
+  const averageScore: number =
+    feedback?.reduce(
+      (sum: number, item: CardFeedback) => sum + item.totalScore,
+      0
+    ) / feedback?.length;
+  const finalAssesment =
+    feedback?.length > 0 ? feedback[0].finalAssessment : null;
   const normalizedType = /mix/gi.test(type) ? "Mixed" : type;
-  const formatedDate = dayjs(feedback?.createdAt || createdAt || Date.now())
+  const formatedDate = dayjs(createdAt || Date.now())
     .calendar("jalali")
     .format("YYYY/MM/DD");
 
@@ -26,7 +38,7 @@ function InterviewCard({
     <div className="card-border w-[360px] max-lg:w-full min-h-96 ">
       <div className="card-interview">
         <div>
-          <div className="absolute top-0 left-0 w-fit px-4 py-2 rounded-br-lg bg-light-600">
+          <div className="absolute top-0 right-0 w-fit px-4 py-2 rounded-bl-lg bg-light-600">
             <p className="badge-text">{normalizedType}</p>
           </div>
           <Image
@@ -49,26 +61,26 @@ function InterviewCard({
             </div>
             <div className="flex flex-row gap-2">
               <Image src="/star.svg" alt="star" width={22} height={22} />
-              <p>{feedback?.totalScore || "---"}/100</p>
+              <p>{averageScore || "---"}/100</p>
             </div>
           </div>
-          <div className=" mt-4 bg-gradient-to-l from-blue-500/30 to-transparent p-2 rounded ">
-            <p className="line-clamp-2 font-light text-sm">
-              {feedback?.finalAssessment ||
-                "شما هنوز مصاحبه ای نداشته اید .یک مصاحبه برا پیشرفت شروع کنید."}
-            </p>
-          </div>
+          {userId && (
+            <div className=" mt-4 bg-gradient-to-l from-blue-500/30 to-transparent p-2 rounded ">
+              <p className="line-clamp-2 font-light text-sm">
+                {finalAssesment || "you have not done yet"}
+              </p>
+            </div>
+          )}
         </div>
         <div className="flex flex-row justify-between">
           <DispalyTechIcon techStack={techstack} />
-          <Button className="btn-primary shadow-[0_4px_15px_rgba(0,0,0)]">
-            <Link
-              href={feedback ? `/interview/${id}/feedback` : `/interview/${id}`}
-            >
-              {feedback ? "مشاهده نتیجه" : "مشاهده مصاحبه"}
-            </Link>
-          </Button>
-          {}
+          <Link
+            href={feedback ? `/interview/${id}/feedback` : `/interview/${id}`}
+          >
+            <Button className="btn-primary shadow-[0_4px_15px_rgba(0,0,0)]">
+              {feedback ? "view feedback" : "view interview"}
+            </Button>
+          </Link>
         </div>
       </div>
     </div>

@@ -28,7 +28,7 @@ async function page({ params }: RouteParams) {
       {feedback?.map(
         (feedback, i) =>
           i === 0 && (
-            <section className="section-feedback">
+            <section key={feedback.id} className="section-feedback">
               <div className="flex flex-row justify-center">
                 <h1 className="text-4xl font-semibold">
                   Feedback on the Interview -{" "}
@@ -59,8 +59,8 @@ async function page({ params }: RouteParams) {
                       alt="calendar"
                     />
                     <p>
-                      {feedback?.createdAt
-                        ? dayjs(feedback.createdAt).format("MMM D, YYYY h:mm A")
+                      {feedback?.created_at
+                        ? dayjs(feedback.created_at).format("YYYY,MMM D")
                         : "N/A"}
                     </p>
                   </div>
@@ -74,31 +74,40 @@ async function page({ params }: RouteParams) {
               {/* Interview Breakdown */}
               <div className="flex flex-col gap-4">
                 <h2>Breakdown of the Interview:</h2>
-                {feedback?.categoryScores?.map((category, index) => (
-                  <div key={index}>
-                    <p className="font-bold">
-                      {index + 1}. {category.name} ({category.score}/100)
-                    </p>
-                    <p>{category.comment}</p>
-                  </div>
-                ))}
+                {feedback?.categoryScores?.map(
+                  (
+                    category: { name: string; score: number; comment: string },
+                    index: number
+                  ) => (
+                    <div key={index}>
+                      <p className="font-extrabold italic">
+                        {index + 1}. {category.name} ({category.score}/100)
+                      </p>
+                      <p>{category.comment}</p>
+                    </div>
+                  )
+                )}
               </div>
 
               <div className="flex flex-col gap-3">
                 <h3>Strengths</h3>
                 <ul>
-                  {feedback?.strengths?.map((strength, index) => (
-                    <li key={index}>{strength}</li>
-                  ))}
+                  {feedback?.strengths?.map(
+                    (strength: string[], index: number) => (
+                      <li key={index}>{strength}</li>
+                    )
+                  )}
                 </ul>
               </div>
 
               <div className="flex flex-col gap-3">
                 <h3>Areas for Improvement</h3>
                 <ul>
-                  {feedback?.areasForImprovement?.map((area, index) => (
-                    <li key={index}>{area}</li>
-                  ))}
+                  {feedback?.areasForImprovement?.map(
+                    (area: string[], index: number) => (
+                      <li key={index}>{area}</li>
+                    )
+                  )}
                 </ul>
               </div>
 
