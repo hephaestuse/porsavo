@@ -80,7 +80,7 @@ function AuthForm({ type }: { type: FormType }) {
             className=" w-full form mt-4 space-y-6"
           >
             {!isSigneIn && (
-              <FormField control={form.control} label="نام" name="name" />
+              <FormField control={form.control} label="Name" name="name" />
             )}
             <FormField
               control={form.control}
