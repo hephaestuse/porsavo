@@ -17,7 +17,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html dir="rtl" lang="fa" className="dark">
+    <html className="dark">
       <body className={`${rubik.className} antialiased pattern`}>
         {children}
         <Toaster />

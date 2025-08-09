@@ -1,7 +1,11 @@
 "use server";
 import { GoogleGenAI, Type } from "@google/genai";
 import { feedbackSchema } from "@/constants";
-import { CreateFeedbackParams, FeedbackResult } from "@/types";
+import {
+  CreateFeedbackParams,
+  FeedbackResult,
+  GetFeedbackByInterviewIdParams,
+} from "@/types";
 import { createClient } from "@/utils/supabase/server";
 import { google } from "@ai-sdk/google";
 import { generateObject } from "ai";
@@ -101,3 +105,23 @@ export async function createFeedback(feedbackParama: FeedbackResult) {
   }
 }
 
+export async function GetFeedbackByInterviewId({
+  interviewId,
+  userId,
+}: GetFeedbackByInterviewIdParams) {
+  console.log("thisis", interviewId);
+
+  if (userId) {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase
+      .from("feedback")
+      .select("*")
+      .eq("interviewId", interviewId)
+      .eq("userId", userId)
+      .order("created_at", { ascending: false });
+
+    if (error) return console.log(error);
+    return data;
+  }
+}
