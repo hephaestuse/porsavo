@@ -65,14 +65,14 @@ function AuthForm({ type }: { type: FormType }) {
   const isSigneIn = type === "sign-in";
   return (
     <div className="card-border lg:min-w-[566px]">
-      <div className="flex flex-col gap-6 card py-14 px-10 ">
+      <div className="flex flex-col gap-6 card py-14 px-10">
         <div className="flex flex-row gap-2 justify-center">
           <Link href="/" className="flex items-center gap-2">
             <Image src="/logo.svg" alt="logo" width={38} height={32} />
-            <h2 className="text-primary-100">پرساوو</h2>
+            <h2 className="text-primary-100">Porsavo</h2>
           </Link>
         </div>
-        <h3 className="text-primary-100">مطاحبه هاتو با هوش مصنوعی تمرین کن</h3>
+        <h3 className="text-primary-100 text-center">Practice job interviews with AI</h3>
 
         <Form {...form}>
           <form
@@ -84,28 +84,28 @@ function AuthForm({ type }: { type: FormType }) {
             )}
             <FormField
               control={form.control}
-              label="ایمیل"
+              label="E-mail"
               name="email"
               type="email"
             />
             <FormField
               control={form.control}
-              label="رمز عبور"
+              label="Password"
               name="password"
               type="password"
               description={!isSigneIn}
             />
             <Button className="btn" type="submit">
-              {isSigneIn ? "ورود" : "ثبت نام"}
+              {isSigneIn ? "Log in" : "sign Up"}
             </Button>
             <OAthLoginBtn provider="github" />
             <p className="text-center">
-              {isSigneIn ? "هنوز اکانت ندارم" : "از قبل اکانت دارم"}؟
+              {isSigneIn ? "I have not account" : "I have account"}?
               <Link
                 href={isSigneIn ? "/sign-up" : "/sign-in"}
                 className="font-bold text-user-primary ms-2"
               >
-                {isSigneIn ? "ثبت نام" : "ورود"}
+                {isSigneIn ? "signe Up" : "Log in"}
               </Link>
             </p>
           </form>

@@ -41,7 +41,7 @@ function FormField({
           </FormControl>
           {description && (
             <FormDescription className="text-amber-200">
-              {type === "password" && "باید حد اقل شامل 6 کاراکتر باشد"}
+              {type === "password" && " at least 6 characters"}
             </FormDescription>
           )}
           <FormMessage />
