@@ -36,8 +36,8 @@ const Agent = ({
   userName: string;
   userId: string;
   type: string;
-  questions: string[];
-  interviewId: string;
+  questions?: string[];
+  interviewId?: string;
 }) => {
   const [callStatus, setCallStatus] = useState<CallStatus>(CallStatus.INACTIVE);
   const [messages, setMessages] = useState<SavedMessage[]>([]);
@@ -56,7 +56,6 @@ const Agent = ({
 
     const onCallEnd = () => {
       setCallStatus(CallStatus.FINISHED);
-      router.push("/");
     };
 
     const onMessage = (message: any) => {

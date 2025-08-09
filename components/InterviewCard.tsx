@@ -61,7 +61,7 @@ async function InterviewCard({
             </div>
             <div className="flex flex-row gap-2">
               <Image src="/star.svg" alt="star" width={22} height={22} />
-              <p>{averageScore || "---"}/100</p>
+              <p>{Math.round(averageScore) || "---"}/100</p>
             </div>
           </div>
           {userId && (
@@ -74,13 +74,26 @@ async function InterviewCard({
         </div>
         <div className="flex flex-row justify-between">
           <DispalyTechIcon techStack={techstack} />
-          <Link
-            href={feedback ? `/interview/${id}/feedback` : `/interview/${id}`}
-          >
-            <Button className="btn-primary shadow-[0_4px_15px_rgba(0,0,0)]">
-              {feedback ? "view feedback" : "view interview"}
-            </Button>
-          </Link>
+          {feedback && (
+            <Link
+              href={
+                feedback.length > 0
+                  ? `/interview/${id}/feedback`
+                  : `/interview/${id}`
+              }
+            >
+              <Button className="btn-primary shadow-[0_4px_15px_rgba(0,0,0)]">
+                {feedback.length > 0 ? "Feedback" : "Dive in"}
+              </Button>
+            </Link>
+          )}
+          {!feedback && (
+            <Link href={`/interview/${id}`}>
+              <Button className="btn-primary shadow-[0_4px_15px_rgba(0,0,0)]">
+                Dive in
+              </Button>
+            </Link>
+          )}
         </div>
       </div>
     </div>

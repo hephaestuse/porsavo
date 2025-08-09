@@ -1,13 +1,13 @@
 import { getUserSession } from "@/actions/auth";
 import Agent from "@/components/Agent";
-import { createClient } from "@/utils/supabase/server";
+import { redirect } from "next/navigation";
 import React from "react";
 
 async function page() {
   const session = await getUserSession();
 
   if (!session) {
-    return <div>لطفاً وارد شوید</div>; // یا redirect یا notFound()
+    redirect("/");
   }
 
   const userData = {
