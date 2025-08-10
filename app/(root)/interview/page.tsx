@@ -12,9 +12,12 @@ async function page() {
 
   const userData = {
     userName:
-      session.user?.identities?.[0]?.identity_data?.full_name ?? "کاربر",
+      session.user?.identities?.[0]?.identity_data?.full_name ??
+      session.user?.user_metadata.username,
     userId: session.user.id,
   };
+  console.log(session);
+
   return (
     <>
       <Agent

@@ -43,7 +43,7 @@ function AuthForm({ type }: { type: FormType }) {
         const result = await signUp(values);
 
         if (result.status === "success") {
-          toast.success("ثبت نام با موفقیت انجام شد لطفا وارد شوید");
+          toast.success("sign up successfully please log in");
           router.push("/sign-in");
         } else {
           toast.error(result.status);
@@ -52,14 +52,14 @@ function AuthForm({ type }: { type: FormType }) {
         const result = await signIn(values);
 
         if (result.status === "success") {
-          toast.success("با موفقیت وارد شدید");
+          toast.success("log in successfully");
           router.push("/");
         } else {
           toast.error(result.status);
         }
       }
     } catch (error) {
-      toast.error(`خطایی رخ داد${error}`);
+      toast.error(`there is an error${error}`);
     }
   }
   const isSigneIn = type === "sign-in";
@@ -72,7 +72,9 @@ function AuthForm({ type }: { type: FormType }) {
             <h2 className="text-primary-100">Porsavo</h2>
           </Link>
         </div>
-        <h3 className="text-primary-100 text-center">Practice job interviews with AI</h3>
+        <h3 className="text-primary-100 text-center">
+          Practice job interviews with AI
+        </h3>
 
         <Form {...form}>
           <form
