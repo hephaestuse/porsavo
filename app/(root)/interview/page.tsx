@@ -16,8 +16,6 @@ async function page() {
       session.user?.user_metadata.username,
     userId: session.user.id,
   };
-  console.log(session);
-
   return (
     <>
       <Agent
